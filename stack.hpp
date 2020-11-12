@@ -38,7 +38,7 @@ class Stack
         int* data_array_;               //  pointer to dynamically allocated array
         int size_;                      //  max size of Stack
         int top_;                       //  index for next free position in Stack
-}
+};
 
 
 #endif
