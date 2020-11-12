@@ -28,7 +28,7 @@ class Stack
         void resize(int size);
 
         //  Info methods
-        int capacity() const { return top_ - 1; }
+        int capacity() const { return top_; }
         int size() const { return size_; }
 
 
