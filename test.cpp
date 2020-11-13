@@ -20,7 +20,7 @@ int main()
     cout << "Class Stack<int> test program\n";
     //  Getting int from user to create Stack
     int size;
-    cout << "Enter the size for Stack(0, 100 000)\n";
+    cout << "\nEnter the size for Stack(0, 100 000)\n";
     GetInputInt(size, 0, 100000);
 
     //  Creating Stack with given size
