@@ -19,7 +19,7 @@ using std::cin;
 using std::endl;
 
 //	Generates (N+2)th Fibonacci number
-long long FibonacciNumbers(int& N, const long long& n1, const long long& n2)
+long long FibonacciNumbers(const int& N, const long long& n1, const long long& n2, int& counter)
 {
 	//	When all iterations done -> returns needed element;
 	//	N is reduced by 1 each iteration to control recursion
@@ -40,7 +40,7 @@ long long FibonacciNumbers(int& N, const long long& n1, const long long& n2)
 	}
 
 	//	Repeats algorithm with updated arguments
-	FibonacciNumbers(--N, n2, (n1 + n2));
+	FibonacciNumbers(N - 1, n2, (n1 + n2), ++counter);
 }
 
 int main()
@@ -66,10 +66,9 @@ int main()
 	int counter_fib = 0;
 	// Calculating sum by method described at the top
 	// Fibonacci numbers initialized by {0, 1} arguments
-	number_of_elements += 2;
-	long long sum = FibonacciNumbers(number_of_elements, 0, 1) - 1;
+	long long sum = FibonacciNumbers(number_of_elements + 2, 0, 1, ++counter_fib) - 1;
 
 	cout << "Sum = " << sum << endl;
-
+	cout << "COUNTER = " << counter_fib << endl;
 	return 0;
 }
