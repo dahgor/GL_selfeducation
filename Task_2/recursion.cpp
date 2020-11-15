@@ -5,11 +5,15 @@
 //	Create recursive function which calculates sum 
 //	of first n element of Fibonacci number.
 //
-//	Using Combinatorial identity to calculate the sum:
-//	Sum(N) = Num(N+2) - 1
-//	where Sum(N) - sum of first N elements
-//		  Num(N+2) - (N+2)th Fibonacci number
-
+//	It uses Combinatorial identity to calculate the sum:
+//	Sum(N) = FibNum(N+2) - 1
+//	where Sum(N) - sum of first N Fibonacci numbers
+//		  FibNum(N+2) - (N+2)th Fibonacci number
+//
+//	To find Nth Fibonacci number it calculates every 
+//	Fibonacci number till needed N. It uses 2 previous
+//	numbers(starting from {0, 1} by default) to calculate the next one, 
+//	FibNum(n) = FibNum(n-1) + FibNum(n-2)
 
 #include <iostream>
 #include <limits>
@@ -18,35 +22,18 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-//	Generates (N+2)th Fibonacci number
-long long FibonacciNumbers(const int& N, const long long& n1, const long long& n2, int& counter)
-{
-	//	When all iterations done -> returns needed element;
-	//	N is reduced by 1 each iteration to control recursion
-	//	Using value 2 to balance forward-shift by 2 (caused by initilizers {0, 1})
-	if (N == 2)
-	{
-		return n2;
-	}
-	//	If calculation of the next Fibonacci number can result in overflowing ->
-	//	returns last generated Fibonacci number
-	else if (n1+n2 < 0)
-	{
-		cout << "Overflow prevented\n"
-			<< "Last calculated element #" << N << endl
-			<< "The sum will be calculated for #" << N - 2
-			<< "-th Fibonacci number\n";
-		return n2;
-	}
-
-	//	Repeats algorithm with updated arguments
-	FibonacciNumbers(N - 1, n2, (n1 + n2), ++counter);
-}
+//	Calculates Nth Fibonacci number
+long long FibonacciNumbers(const int& N, const long long& n1, const long long& n2);
 
 int main()
 {
 	cout << "Calculating the sum of first N elements of Fibonacci number\n\n";
 	cout << "Enter number of elements to sum: ";
+
+	//	Defines first 2 items of Fibonacci numbers;
+	//	there's also a version with {1, 1} beginning
+	//	if you need it -> change it here
+	const int initializers[2] = {0, 1};
 
 	//	Getting input from user and validating it
 	int number_of_elements;
@@ -63,12 +50,41 @@ int main()
 		cout << "Please, enter valid argument: ";
 		cin >> number_of_elements;
 	}
-	int counter_fib = 0;
-	// Calculating sum by method described at the top
-	// Fibonacci numbers initialized by {0, 1} arguments
-	long long sum = FibonacciNumbers(number_of_elements + 2, 0, 1, ++counter_fib) - 1;
-
+	
+	// Calculating sum by method described at the top and printing it
+	long long sum = FibonacciNumbers(number_of_elements + 2, initializers[0], initializers[1]) - 1;
 	cout << "Sum = " << sum << endl;
-	cout << "COUNTER = " << counter_fib << endl;
+
 	return 0;
+}
+
+//	Generates Nth Fibonacci number
+long long FibonacciNumbers(const int& N, const long long& n1, const long long& n2)
+{	
+	//	Recursion depth counter
+	//	Starts from 2 because two numbers are already known {0, 1} or {1, 1}
+	static int counter = 2;
+
+	//	When all iterations done -> returns needed element;
+	//	N is reduced by 1 each iteration to control recursion
+	//	Using value 2 to balance forward-shift by 2 (caused by 2 already known initilial values)
+	if (N <= 2)
+	{
+		return n2;
+	}
+	//	If calculation of the next Fibonacci number can result in stack overflowing ->
+	//	returns last generated Fibonacci number and prints message
+	else if (n1 + n2 < 0)
+	{
+		cout << "Overflowing of stack prevented\n"
+			<< "Last sucessfully calculated element is " << counter << "-th Fibonacci number\n"
+			<< "The sum will be calculated for " << counter - 2
+			<< " Fibonacci numbers\n";
+		return n2;
+	}
+
+	++counter;
+
+	//	Calls itself with updated arguments
+	FibonacciNumbers(N - 1, n2, n1 + n2);
 }
