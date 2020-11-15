@@ -27,15 +27,16 @@ long long FibonacciNumbers(const int& N, const long long& n1, const long long& n
 
 int main()
 {
-	cout << "Calculating the sum of first N elements of Fibonacci number\n\n";
-	cout << "Enter number of elements to sum: ";
+	cout << "Calculating the sum of first N elements of Fibonacci number\n";
 
 	//	Defines first 2 items of Fibonacci numbers;
 	//	there's also a version with {1, 1} beginning
 	//	if you need it -> change it here
 	const int initializers[2] = {0, 1};
+	cout << "Fibonacci numbers beginning is set to " << initializers[0] << ", " << initializers[1] << ", ...\n\n";
 
 	//	Getting input from user and validating it
+	cout << "Enter number of elements to sum: ";
 	int number_of_elements;
 	cin >> number_of_elements;
 
