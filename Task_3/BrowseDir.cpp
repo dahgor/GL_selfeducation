@@ -7,12 +7,15 @@
 //  Program should start two threads. The first one should only calculate element,
 //  the second one should print full path of element.
 //
-//  Process devided into 2 threads. It's guaranteed that output stream won't be mixed.
-//  Threads can print results in one order or another depending on timing, but not simultaneously.
+//  Process devided into 2 threads. It's guaranteed that:
+//  1.Output stream won't be mixed by random threads' output
+//  2.Firstly, the counter thread prints result
 
 #include <iostream>
 #include <pthread.h>
 #include <dirent.h>
+#include <unistd.h>
+#include <vector>
 
 //  If create_pthread method failed it exits program
 void ExitIfFailed(int operation);
@@ -23,7 +26,7 @@ void* CountFiles(void* directory);
 //  Prints out filenames in given directory
 void* PrintFilenames(void* directory);
 
-// Mutex to synchronize threads
+// Mutex to synchronize access to output steam
 pthread_mutex_t out_stream = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char** argv)
@@ -36,7 +39,8 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    //  Checking if it's possible to open directory with given name
+    //  Checking if it's possible to open directory
+    //  argv[1] is directory name
     if (!(opendir(argv[1])))
     {
         std::cout << "Cannot open directory\n";
@@ -69,6 +73,9 @@ void ExitIfFailed(int operation)
 
 void* CountFiles(void* directory)
 {
+    //  Occupy output stream by this thread
+    pthread_mutex_lock(&out_stream);
+
     // Initializes DIR with pointer to opened directory
     DIR* dir_ptr = opendir(static_cast<const char*>(directory));
 
@@ -86,11 +93,11 @@ void* CountFiles(void* directory)
         
         ++counter;
     }
-    //  Occupy output stream by this thread
-    pthread_mutex_lock(&out_stream);
 
     //  Prints result
+    std::cout << "----------------------------\n";
     std::cout << "Total number of files: " << counter << std::endl;
+    std::cout << "----------------------------\n";
 
     //  Free output stream
     pthread_mutex_unlock(&out_stream);
@@ -104,8 +111,12 @@ void* PrintFilenames(void* directory)
     DIR* dir_ptr = opendir(static_cast<const char*>(directory));
     struct dirent* dirent_ptr;
 
-    //  Occupy output stream by this thread
-    pthread_mutex_lock(&out_stream);
+    // Getting current directory full path
+    char* current_dir_path = get_current_dir_name();
+
+    //  Storage for filenames
+    //  used to minimize waiting time
+    std::vector<std::string> filenames;
 
     //  Iteration through all items in directory
     while (dirent_ptr = readdir(dir_ptr))
@@ -116,9 +127,16 @@ void* PrintFilenames(void* directory)
             continue;
         }
         
-        //  Prints file names
-        std::cout << dirent_ptr->d_name << std::endl;
+        //  Adding filenames to storage
+        filenames.push_back(static_cast<std::string>(current_dir_path) + "/" + static_cast<char*>(directory) + "/" + dirent_ptr->d_name);
     }
+    //  Occupy output stream by this thread
+    pthread_mutex_lock(&out_stream);
+
+    //  Prints out filenames
+    for (std::string name : filenames)
+        std::cout << name << std::endl;
+    
     //  Free output stream
     pthread_mutex_unlock(&out_stream);
 
