@@ -6,6 +6,9 @@
 //  Name of folder should be received as command line argument.
 //  Program should start two threads. The first one should only calculate element,
 //  the second one should print full path of element.
+//
+//  Process devided into 2 threads. It's guaranteed that output stream won't be mixed.
+//  Threads can print results in one order or another depending on timing, but not simultaneously.
 
 #include <iostream>
 #include <pthread.h>
@@ -19,6 +22,9 @@ void* CountFiles(void* directory);
 
 //  Prints out filenames in given directory
 void* PrintFilenames(void* directory);
+
+// Mutex to synchronize threads
+pthread_mutex_t out_stream = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char** argv)
 {
@@ -69,6 +75,7 @@ void* CountFiles(void* directory)
     struct dirent* dirent_ptr;
     int counter = 0;
 
+    // Iteration through all items in directory
     while (dirent_ptr = readdir(dir_ptr))
     {
         //  Skips other directories
@@ -79,9 +86,14 @@ void* CountFiles(void* directory)
         
         ++counter;
     }
+    //  Occupy output stream by this thread
+    pthread_mutex_lock(&out_stream);
 
     //  Prints result
     std::cout << "Total number of files: " << counter << std::endl;
+
+    //  Free output stream
+    pthread_mutex_unlock(&out_stream);
 
     pthread_exit(0);
 }
@@ -91,6 +103,9 @@ void* PrintFilenames(void* directory)
     // Initializes DIR with pointer to opened directory
     DIR* dir_ptr = opendir(static_cast<const char*>(directory));
     struct dirent* dirent_ptr;
+
+    //  Occupy output stream by this thread
+    pthread_mutex_lock(&out_stream);
 
     //  Iteration through all items in directory
     while (dirent_ptr = readdir(dir_ptr))
@@ -104,5 +119,8 @@ void* PrintFilenames(void* directory)
         //  Prints file names
         std::cout << dirent_ptr->d_name << std::endl;
     }
+    //  Free output stream
+    pthread_mutex_unlock(&out_stream);
+
     pthread_exit(0);
 }
