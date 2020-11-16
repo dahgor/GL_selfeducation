@@ -7,9 +7,11 @@
 //  Program should start two threads. The first one should only calculate element,
 //  the second one should print full path of element.
 //
+//  Program can access directories which are in the same folder with program.
+//
 //  Process devided into 2 threads. It's guaranteed that:
 //  1.Output stream won't be mixed by random threads' output
-//  2.Firstly, the counter thread prints result
+//  2.The counter thread prints result in the first place
 
 #include <iostream>
 #include <pthread.h>
@@ -23,10 +25,10 @@ void ExitIfFailed(int operation);
 //  Counts files in given directory
 void* CountFiles(void* directory);
 
-//  Prints out filenames in given directory
+//  Prints out filenames from given directory
 void* PrintFilenames(void* directory);
 
-// Mutex to synchronize access to output steam
+//  Mutex to synchronize access to output steam
 pthread_mutex_t out_stream = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char** argv)
