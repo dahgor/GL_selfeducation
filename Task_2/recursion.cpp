@@ -23,8 +23,8 @@ using std::cin;
 using std::endl;
 
 //  Calculates Nth Fibonacci number
-//  Returns Nth Fibonacci number
-//  Receives (Needed Fibonacci number, First number, Second number in sequence)
+//  Returning Nth Fibonacci number
+//  Receiving (Needed Nth Fibonacci number, First number, Second number in Fibonacci sequence)
 long long FibonacciNumbers(const int& N, const long long& n1, const long long& n2);
 
 int main()
@@ -41,6 +41,7 @@ int main()
 	cout << "Enter number of elements to sum: ";
 	int number_of_elements;
 	cin >> number_of_elements;
+    cout << endl;
 
 	//  If input failed or is not valid -> repeats request
 	while (cin.fail() ||
@@ -56,7 +57,7 @@ int main()
 	
 	//  Calculating sum by method described at the top
 	long long sum = FibonacciNumbers(number_of_elements + 2, initializers[0], initializers[1]) - 1;
-	cout << "Sum = " << sum << endl;
+	cout << "\nSum = " << sum << endl;
 
 	return 0;
 }
@@ -70,7 +71,7 @@ long long FibonacciNumbers(const int& N, const long long& n1, const long long& n
 
 	//  When all iterations done -> returns needed element;
 	//  N is reduced by 1 each iteration to control recursion
-	//  Using value 2 to balance forward-shift by 2 (caused by 2 already known initilial values)
+	//  Value '2' is used to balance forward-shift caused by 2 already known initilial values
 	if (N <= 2)
 	{
 		return n2;
@@ -79,7 +80,7 @@ long long FibonacciNumbers(const int& N, const long long& n1, const long long& n
 	//  returns last generated Fibonacci number and prints message
 	else if (n1 + n2 < 0)
 	{
-		cout << "Overflowing of stack prevented\n"
+		cout << "Overflowing of stack prevented!\n"
 			<< "Last sucessfully calculated element is " << counter << "-th Fibonacci number\n"
 			<< "The sum will be calculated for " << counter - 2
 			<< " Fibonacci numbers\n";
