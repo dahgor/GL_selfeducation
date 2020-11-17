@@ -11,8 +11,10 @@
 //  resize – increase/decrease size of stack;
 //  
 //  It wasn't specified so I created class Stack for Integers based on array.
-//  Stack uses dynamically allocated memory from heap, so only limit for
-//  Stack size is your memory.
+//
+//  Stack uses dynamically allocated memory from heap, so only limitation for
+//  Stack size is your memory. Stack size was limited to 250.000(around 1Mb, if int size = 4bytes) in order to
+//  prevent from using excessive memory.
 
 #ifndef _STACK_H_
 #define _STACK_H_
@@ -33,7 +35,12 @@ class Stack
         int capacity() const { return top_; }
         int size() const { return size_; }
 
-
+        //  Limits for Stack size
+        enum Limits
+        {
+            MIN = 1,
+            MAX = 250000
+        };
 
     private:
 

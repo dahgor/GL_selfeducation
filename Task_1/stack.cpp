@@ -5,9 +5,10 @@
 
 Stack::Stack(int size)
 {
-    if (size <= 0)
+    if (size < Limits::MIN ||
+        size > Limits::MAX)
     {
-        throw "Stack size cannot be <= 0\n";
+        throw "Invalid Stack size\n";
     }
     
     size_ = size;
@@ -42,9 +43,10 @@ int& Stack::pop()
 void Stack::resize(int new_size)
 {
     //  Checks size param
-    if (new_size <= 0)
+    if (new_size < Limits::MIN ||
+        new_size > Limits::MAX)
     {
-        throw "Stack size cannot be <= 0\n";
+        throw "Invalid Stack size\n";
     }
     else if (new_size == size_)
     {
