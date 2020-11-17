@@ -10,7 +10,9 @@
 //  size – maximum amount of elements;
 //  resize – increase/decrease size of stack;
 //  
-//  It wasn't specified so I created class Stack for Integers based on array
+//  It wasn't specified so I created class Stack for Integers based on array.
+//  Stack uses dynamically allocated memory from heap, so only limit for
+//  Stack size is your memory.
 
 #ifndef _STACK_H_
 #define _STACK_H_

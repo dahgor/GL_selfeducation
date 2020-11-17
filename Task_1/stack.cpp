@@ -5,13 +5,11 @@
 
 Stack::Stack(int size)
 {
-    //  Checks size param
     if (size <= 0)
     {
         throw "Stack size cannot be <= 0\n";
     }
     
-    //  Initializes data members
     size_ = size;
     top_ = 0;
     data_array_ = new int[size_];
@@ -19,8 +17,7 @@ Stack::Stack(int size)
 
 bool Stack::push(int data)
 {
-    //  Checks if there's free space,
-    //  adds new item on the top of Stack
+    //  Checking if there's free space left in Stack
     if (top_ < size_)
     {
         data_array_[top_] = data;
@@ -33,8 +30,7 @@ bool Stack::push(int data)
 
 int& Stack::pop()
 {
-    //  If there're items in Stack
-    //  returns the top one
+    //  Checking if Stack isn't empty
     if (top_ > 0)
     {
         return data_array_[--top_];
@@ -80,7 +76,6 @@ void Stack::resize(int new_size)
     delete[] data_array_;
     data_array_ = new_data_array;
 
-    //  Updating size
     size_ = new_size;
 }
 
