@@ -18,10 +18,12 @@ void GetInputOperations(char& answer);
 int main()
 {
     cout << "Class Stack<int> test program\n";
-    //  Getting size from user to create Stack
+
+    cout << "\nEnter the size for Stack(min = " << Stack::Limits::MIN
+         << ", max = " << Stack::Limits::MAX << ")\n";
+
     int size;
-    cout << "\nEnter the size for Stack(0, 100 000)\n";
-    GetInputInt(size, 0, 100000);
+    GetInputInt(size, Stack::Limits::MIN, Stack::Limits::MAX);
 
     //  Creating Stack with given size
     Stack MyStack(size);
@@ -43,19 +45,19 @@ int main()
         {
         //  Stack.push(arg)
         case '1':
-            ShowBorder();
-
             //  If there's free place in Stack pushes one more
             if (MyStack.capacity() < MyStack.size())
             {
                 cout << "Integer to add(-100 000, 100 000)\n";
                 GetInputInt(item_to_add, -100000, 100000);
 
+                ShowBorder();
                 MyStack.push(item_to_add);
                 cout << "Item added\n";
             }
             else
             {
+                ShowBorder();
                 cout << "Stack is full\n";
             }
             
@@ -69,8 +71,8 @@ int main()
             //  If Stack is not Empty pops one item
             if (MyStack.capacity() > 0)
             {
-                cout << "Item from Stack:\n"
-                    << MyStack.pop() << endl;
+                cout << "Item from Stack: "
+                     << MyStack.pop() << endl;
             }
             else
             {
@@ -82,13 +84,14 @@ int main()
 
         //  Stack.resize(arg)
         case '3':
-            ShowBorder();
+            cout << "\nEnter the new size for Stack(min = " << Stack::Limits::MIN
+                 << ", max = " << Stack::Limits::MAX << ")\n";
 
-            cout << "The new size for Stack(0, 100 000)\n";
-            GetInputInt(size, 0, 100000);
+            GetInputInt(size, Stack::Limits::MIN, Stack::Limits::MAX);
             MyStack.resize(size);
-            cout << "Stack resized\n";
 
+            ShowBorder();
+            cout << "Stack resized\n";
             ShowBorder();
             break;
 
@@ -97,7 +100,7 @@ int main()
             ShowBorder();
 
             cout << "Capasity: "
-                << MyStack.capacity() << endl;
+                 << MyStack.capacity() << endl;
 
             ShowBorder();
             break;
@@ -107,7 +110,7 @@ int main()
             ShowBorder();
 
             cout << "Size: "
-                << MyStack.size() << endl;
+                 << MyStack.size() << endl;
 
             ShowBorder();
             break;
@@ -120,7 +123,7 @@ int main()
         //  If program is unpredictable - stop it
         default:
             cout << "Unpredicted behaviour\n"
-                << "Program terminated\n";
+                 << "Program terminated\n";
             break;
         }
 
@@ -155,7 +158,8 @@ void GetInputInt(int& number, const int& min_limit, const int& max_limit)
         }
 
         ClearInputBuffer();
-    } while (!(number > min_limit && number < max_limit));
+    } while (number < min_limit ||
+             number > max_limit);
 }
 
 void GetInputOperations(char& answer)
